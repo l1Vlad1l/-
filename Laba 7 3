@@ -1,0 +1,130 @@
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class Warehouse {
+    public static void main(String[] args) {
+        final int MAX_WEIGHT = 150;
+        final int NUMBER_OF_LOADERS = 3;
+        
+        ExecutorService executor = Executors.newFixedThreadPool(NUMBER_OF_LOADERS);
+        
+        Loader loader1 = new Loader("Грузчик 1", MAX_WEIGHT);
+        Loader loader2 = new Loader("Грузчик 2", MAX_WEIGHT);
+        Loader loader3 = new Loader("Грузчик 3", MAX_WEIGHT);
+
+        executor.execute(loader1);
+        executor.execute(loader2);
+        executor.execute(loader3);
+        
+        executor.shutdown();
+    }
+}
+
+interface Loader extends Runnable {
+    void loadGoods();
+    void unloadGoods();
+}
+
+class LoaderRealization implements Loader {
+    private String name;
+    private int maxWeight;
+    
+    public LoaderRealization(String name, int maxWeight) {
+        this.name = name;
+        this.maxWeight = maxWeight;
+    }
+    
+    @Override
+    public void loadGoods() {
+        System.out.println(name + " начал загрузку товаров");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(name + " закончил загрузку товаров");
+    }
+    
+    @Override
+    public void unloadGoods() {
+        System.out.println(name + " начал разгрузку товаров");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(name + " закончил разгрузку товаров");
+    }
+    
+    @Override
+    public void run() {
+        loadGoods();
+        
+        System.out.println(name + " отправился на другой склад");
+        
+        unloadGoods();
+    }
+}
+
+class Loader implements Runnable {
+    private String name;
+    private int maxWeight;
+    
+    public Loader(String name, int maxWeight) {
+        this.name = name;
+        this.maxWeight = maxWeight;
+    }
+    
+    @Override
+    public void run() {
+        System.out.println(name + " прибыл на склад");
+        
+        int currentWeight = 0;
+        while (currentWeight < maxWeight) {
+            int weight = (int) (Math.random() * 10) + 1;
+            if (currentWeight + weight > maxWeight) {
+                break;
+            }
+            
+            currentWeight += weight;
+            
+            System.out.println(name + " загрузил товары весом " + weight + " кг");
+            
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        System.out.println(name + " собрал максимально допустимый вес товаров и отправляется на другой склад");
+        
+        System.out.println(name + " прибыл на другой склад");
+        
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        currentWeight = 0;
+        while (currentWeight < maxWeight) {
+            int weight = (int) (Math.random() * 10) + 1;
+            if (currentWeight + weight > maxWeight) {
+                break;
+            }
+            
+            currentWeight += weight;
+            
+            System.out.println(name + " разгрузил товары весом " + weight + " кг");
+            
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println(name + " разгрузил все товары и закончил работу");
+    }
+}
