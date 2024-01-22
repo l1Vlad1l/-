@@ -1,0 +1,35 @@
+public class ArrayAverage {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3, 4, 5};
+        int sum = 0;
+        int count = 0;
+        
+        try {
+            // Вычисление суммы элементов массива
+            for (int i = 0; i < arr.length; i++) {
+                sum += arr[i];
+                count++;
+            }
+            
+            // Проверка наличия элементов в массиве
+            if (count == 0) {
+                throw new Exception("Массив пуст");
+            }
+            
+            // Вычисление среднего арифметического
+            double average = (double) sum / count;
+            
+            // Вывод результата
+            System.out.println("Среднее арифметическое: " + average);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // Обработка ошибки выхода за границы массива
+            System.out.println("Ошибка: выход за границы массива");
+        } catch (NumberFormatException e) {
+            // Обработка ошибки неверных данных
+            System.out.println("Ошибка: неверные данные");
+        } catch (Exception e) {
+            // Общая обработка остальных ошибок
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+    }
+}
