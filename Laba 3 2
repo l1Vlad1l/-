@@ -1,0 +1,89 @@
+java
+import java.util.HashMap;
+
+public class Product {
+    private String name;
+    private String description;
+    private double price;
+    private int quantity;
+
+    public Product(String name, String description, double price, int quantity) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                '}';
+    }
+}
+
+public class ProductCatalog {
+    private HashMap<String, Product> productMap;
+
+    public ProductCatalog() {
+        productMap = new HashMap<>();
+    }
+
+    public void addProduct(String article, Product product) {
+        productMap.put(article, product);
+    }
+
+    public Product findProduct(String article) {
+        return productMap.get(article);
+    }
+
+    public void removeProduct(String article) {
+        productMap.remove(article);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        ProductCatalog catalog = new ProductCatalog();
+
+        // Добавление товаров
+        Product product1 = new Product("Товар 1", "Описание товара 1", 100.0, 10);
+        Product product2 = new Product("Товар 2", "Описание товара 2", 200.0, 5);
+        catalog.addProduct("12345", product1);
+        catalog.addProduct("67890", product2);
+
+        // Поиск товара по артикулу
+        Product foundProduct = catalog.findProduct("12345");
+        System.out.println(foundProduct);
+
+        // Удаление товара по артикулу
+        catalog.removeProduct("12345");
+
+        // Проверка удаления товара
+        foundProduct = catalog.findProduct("12345");
+        System.out.println(foundProduct); // Выведет null
+    }
+}
