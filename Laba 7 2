@@ -1,0 +1,87 @@
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+public class MatrixMaxThreadExample {
+    public static void main(String[] args) {
+        int[][] matrix = {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
+        };
+        int threadsNumber = 3;
+        
+        ExecutorService executor = Executors.newFixedThreadPool(threadsNumber);
+        
+        // Разделение матрицы на равные части и обработка каждой части в отдельном потоке
+        int chunkSize = matrix.length / threadsNumber;
+        int startIndex = 0;
+        int endIndex = chunkSize;
+        for (int i = 0; i < threadsNumber; i++) {
+            MaxElementTask task = new MaxElementTask(matrix, startIndex, endIndex);
+            executor.submit(task);
+            startIndex = endIndex;
+            endIndex += chunkSize;
+        }
+        
+        executor.shutdown();
+        
+        try {
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        // Сравнение результатов всех потоков для нахождения наибольшего элемента
+        int max = Integer.MIN_VALUE;
+        for (MaxElementTask task : MaxElementTask.getTasks()) {
+            if (task.getResult() > max) {
+                max = task.getResult();
+            }
+        }
+        
+        // Вывод результата
+        System.out.println("Наибольший элемент матрицы: " + max);
+    }
+}
+
+class MaxElementTask implements Runnable {
+    private static final Object lock = new Object();
+    private static final List<MaxElementTask> tasks = new ArrayList<>();
+    
+    private final int[][] matrix;
+    private final int startIndex;
+    private final int endIndex;
+    private int result;
+    
+    public MaxElementTask(int[][] matrix, int startIndex, int endIndex) {
+        this.matrix = matrix;
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+        
+        synchronized (lock) {
+            tasks.add(this);
+        }
+    }
+    
+    public int getResult() {
+        return result;
+    }
+    
+    public static List<MaxElementTask> getTasks() {
+        return tasks;
+    }
+    
+    @Override
+    public void run() {
+        int max = Integer.MIN_VALUE;
+        for (int i = startIndex; i < endIndex; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] > max) {
+                    max = matrix[i][j];
+                }
+            }
+        }
+        result = max;
+    }
+}
