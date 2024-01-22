@@ -1,0 +1,40 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+class CustomInputMismatchException extends Exception {
+    public CustomInputMismatchException(String message) {
+        super(message);
+    }
+}
+
+class ExceptionHandler {
+    private static final String LOG_FILE = "exceptions.log";
+
+    public static void main(String[] args) {
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.print("Введите целое число: ");
+            int number = scanner.nextInt();
+            System.out.println("Вы ввели число: " + number);
+        } catch (CustomInputMismatchException e) {
+            logException(e);
+            System.out.println("Произошла ошибка при вводе числа: " + e.getMessage());
+        } catch (InputMismatchException e) {
+            logException(e);
+            System.out.println("Произошла ошибка при вводе числа: введено не число");
+        }
+    }
+
+    private static void logException(Exception e) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG_FILE, true))) {
+            writer.write("Произошло исключение: " + e.getClass().getSimpleName() + "\n");
+            writer.write("Сообщение об ошибке: " + e.getMessage() + "\n");
+            writer.write("--------------------\n");
+        } catch (IOException ex) {
+            System.out.println("Ошибка при записи в файл лога исключений");
+            ex.printStackTrace();
+        }
+    }
+}
