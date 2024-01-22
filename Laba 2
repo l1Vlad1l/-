@@ -1,0 +1,99 @@
+public class Main {
+    public static void main(String[] args) {
+        Person person = new Student("Ivan", 25, "MSU");
+        Student student = new Student("Alex", 20, "MSU");
+        Teacher teacher = new Teacher("Elena", 35, "Mathematics");
+        AssistantTeacher assistant = new AssistantTeacher("Dmitry", 30, "Physics", 3);
+
+        System.out.println(person.getRole());
+        System.out.println(student.getRole() + ", Student count: " + Student.getCount());
+        System.out.println(teacher.getRole());
+        System.out.println(assistant.getRole());
+
+        student.setDescription("This is a new student");
+        assistant.setDescription("This is an assistant teacher");
+
+        System.out.println(student.getDescription());
+        System.out.println(assistant.getDescription());
+
+        overflow();
+    }
+
+    public static void overflow() {
+        System.out.println("Method overflow");
+    }
+}
+
+abstract class Person {
+    private String name;
+    private int age;
+    private String description;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public abstract String getRole();
+}
+
+class Student extends Person {
+    private static int count = 0;
+    private String university;
+
+    public Student() {
+        super("", 0);
+        count++;
+    }
+
+    public Student(String name, int age, String university) {
+        super(name, age);
+        this.university = university;
+        count++;
+    }
+
+    public static int getCount() {
+        return count;
+    }
+
+    @Override
+    public String getRole() {
+        return "Student";
+    }
+}
+
+class Teacher extends Person {
+    private String subject;
+
+    public Teacher(String name, int age, String subject) {
+        super(name, age);
+        this.subject = subject;
+    }
+
+    @Override
+    public String getRole() {
+        return "Teacher";
+    }
+}
+
+class AssistantTeacher extends Teacher {
+    private int experience;
+
+    public AssistantTeacher(String name, int age, String subject, int experience) {
+        super(name, age, subject);
+        this.experience = experience;
+    }
+
+    @Override
+    public String getRole() {
+        return "Assistant Teacher";
+    }
+}
