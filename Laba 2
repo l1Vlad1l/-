@@ -1,99 +1,136 @@
-public class Main {
-    public static void main(String[] args) {
-        Person person = new Student("Ivan", 25, "MSU");
-        Student student = new Student("Alex", 20, "MSU");
-        Teacher teacher = new Teacher("Elena", 35, "Mathematics");
-        AssistantTeacher assistant = new AssistantTeacher("Dmitry", 30, "Physics", 3);
+import java.util.*;
 
-        System.out.println(person.getRole());
-        System.out.println(student.getRole() + ", Student count: " + Student.getCount());
-        System.out.println(teacher.getRole());
-        System.out.println(assistant.getRole());
+public class Solutions {
 
-        student.setDescription("This is a new student");
-        assistant.setDescription("This is an assistant teacher");
-
-        System.out.println(student.getDescription());
-        System.out.println(assistant.getDescription());
-
-        overflow();
+    // 1. Метод, который возвращает строку, состоящую из символов, входящих в 1 строку, но не входящих во 2
+    public static String duplicateChars(String str1, String str2) {
+        StringBuilder result = new StringBuilder();
+        for (char c : str1.toCharArray()) {
+            if (str2.indexOf(c) == -1) {
+                result.append(c);
+            }
+        }
+        return result.toString();
     }
 
-    public static void overflow() {
-        System.out.println("Method overflow");
-    }
-}
-
-abstract class Person {
-    private String name;
-    private int age;
-    private String description;
-
-    public Person(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public abstract String getRole();
-}
-
-class Student extends Person {
-    private static int count = 0;
-    private String university;
-
-    public Student() {
-        super("", 0);
-        count++;
-    }
-
-    public Student(String name, int age, String university) {
-        super(name, age);
-        this.university = university;
-        count++;
-    }
-
-    public static int getCount() {
+    // 2. Метод, который возвращает количество нечетных чисел, кратных 3
+    public static int dividedByThree(int[] arr) {
+        int count = 0;
+        for (int num : arr) {
+            if (num % 2 != 0 && num % 3 == 0) {
+                count++;
+            }
+        }
         return count;
     }
 
-    @Override
-    public String getRole() {
-        return "Student";
-    }
-}
-
-class Teacher extends Person {
-    private String subject;
-
-    public Teacher(String name, int age, String subject) {
-        super(name, age);
-        this.subject = subject;
+    // 3. Метод для библиографического форматирования ФИО
+    public static String getInitials(String fullName) {
+        String[] parts = fullName.split(" ");
+        return parts[1].substring(0, 1).toUpperCase() + "." +
+               parts[2].substring(0, 1).toUpperCase() + "." +
+               parts[0].substring(0, 1).toUpperCase() + parts[0].substring(1).toLowerCase();
     }
 
-    @Override
-    public String getRole() {
-        return "Teacher";
+    // 4. Метод для нормализации массива вещественных чисел
+    public static double[] normalizator(double[] arr) {
+        double min = Double.MAX_VALUE;
+        double max = Double.MIN_VALUE;
+        for (double num : arr) {
+            if (num < min) min = num;
+            if (num > max) max = num;
+        }
+        double[] result = new double[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = (arr[i] - min) / (max - min);
+        }
+        return result;
     }
-}
 
-class AssistantTeacher extends Teacher {
-    private int experience;
-
-    public AssistantTeacher(String name, int age, String subject, int experience) {
-        super(name, age, subject);
-        this.experience = experience;
+    // 5. Метод для «сжатой» версии массива, упорядоченной и без нулей
+    public static List<Integer> compressedNums(double[] arr) {
+        TreeSet<Integer> set = new TreeSet<>();
+        for (double num : arr) {
+            if (num != 0) {
+                set.add((int) Math.floor(num));
+            }
+        }
+        return new ArrayList<>(set);
     }
 
-    @Override
-    public String getRole() {
-        return "Assistant Teacher";
+    // 6. Метод для преобразования строки из CamelCase в SnakeCase
+    public static String camelToSnake(String str) {
+        return str.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
+    }
+
+    // 7. Метод для поиска второго по величине элемента в массиве
+    public static int secondBiggest(int[] arr) {
+        TreeSet<Integer> sortedSet = new TreeSet<>();
+        for (int num : arr) {
+            sortedSet.add(num);
+        }
+        return sortedSet.lower(sortedSet.last());
+    }
+
+    // 8. Метод для разворота строки между маркерными символами
+    public static String localReverse(String str, char marker) {
+        int firstIndex = str.indexOf(marker);
+        int lastIndex = str.lastIndexOf(marker);
+        if (firstIndex == -1 || firstIndex == lastIndex) return str;
+        String partToReverse = str.substring(firstIndex + 1, lastIndex);
+        StringBuilder reversed = new StringBuilder(partToReverse).reverse();
+        return str.substring(0, firstIndex + 1) + reversed.toString() + str.substring(lastIndex);
+    }
+
+    // 9. Метод для подсчета одинаковых целых чисел
+    public static int equal(int a, int b, int c) {
+        if (a == b && b == c) return 3;
+        if (a == b || b == c || a == c) return 2;
+        return 0;
+    }
+
+    // 10. Метод для проверки анаграмм
+    public static boolean isAnagram(String str1, String str2) {
+        char[] arr1 = str1.replaceAll("[^a-zA-Z]", "").toLowerCase().toCharArray();
+        char[] arr2 = str2.replaceAll("[^a-zA-Z]", "").toLowerCase().toCharArray();
+        Arrays.sort(arr1);
+        Arrays.sort(arr2);
+        return Arrays.equals(arr1, arr2);
+    }
+
+    public static void main(String[] args) {
+        // Пример использования методов:
+
+        // 1.
+        System.out.println(duplicateChars("Barack", "Obama")); // "rck"
+
+        // 2.
+        System.out.println(dividedByThree(new int[]{3, 12, 7, 81, 52})); // 2
+
+        // 3.
+        System.out.println(getInitials("kozhevnikova tatiana vitalevna")); // "T.V. Kozhevnikova"
+
+        // 4.
+        System.out.println(Arrays.toString(normalizator(new double[]{3.5, 7.0, 1.5, 9.0, 5.5}))); 
+        // [0.3333, 0.8333, 0.0, 1.0, 0.6667]
+
+        // 5.
+        System.out.println(compressedNums(new double[]{1.6, 0, 212.3, 34.8, 0, 27.5})); // [1, 27, 34, 212]
+
+        // 6.
+        System.out.println(camelToSnake("helloWorld")); // "hello_world"
+
+        // 7.
+        System.out.println(secondBiggest(new int[]{3, 5, 8, 1, 2, 4})); // 5
+
+        // 8.
+        System.out.println(localReverse("Hello, I’m under the water, please help me", 'e')); 
+        // " Hednu m’I ,oller thetaw er, plesae hem ple"
+
+        // 9.
+        System.out.println(equal(8, 1, 8)); // 2
+
+        // 10.
+        System.out.println(isAnagram("LISTEN", "silent")); // true
     }
 }
