@@ -1,7 +1,6 @@
 import java.util.*;
 
 public class Solutions {
-
     // 1. Метод, который возвращает строку, состоящую из символов, входящих в 1 строку, но не входящих во 2
     public static String duplicateChars(String str1, String str2) {
         StringBuilder result = new StringBuilder();
